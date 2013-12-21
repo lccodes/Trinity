@@ -1,0 +1,546 @@
+URL url;
+InputStream is = null;
+DataInputStream dis;
+String line = "";
+int x = 0;
+
+/*while ((month() == 9) || (month() == 10))
+{
+    if((hour() == 10) && (minute() == 0) && (second() == 0))
+  {*/
+String[] words = new String[100];
+    try {
+                  //Location of daily USD/EUR archive set up through tweetarchivist
+    url = new URL("http://www.tweetarchivist.com/tweetmytrade/2/WordCloud");
+    is = url.openStream();  // throws an IOException
+    dis = new DataInputStream(new BufferedInputStream(is));
+
+    while ((line = dis.readLine()) != null) {
+
+           if(line.contains("<area shape=\"poly\""))
+           {
+             
+               String[] temp = line.split("title=\"");
+               
+               String[] temp2 = temp[1].split("\" alt=\"\" />");
+ 
+                   words[x] = temp2[0];
+                   x++;
+           }
+           
+            
+    
+    
+    }//dont
+
+} catch (MalformedURLException mue) {
+     mue.printStackTrace();
+} catch (IOException ioe) {
+     ioe.printStackTrace();
+} finally {
+    try {
+        is.close();
+    } catch (IOException ioe) {
+        // nothing to see here
+    }
+}
+
+String[] usd = new String[25];
+usd[0] = words[0];
+int count = 1;
+for (int i = 1; i < 75; i++)
+{
+  if(words[i] != null)
+  {
+  if(words[i-1].equals(words[i]) == false)
+  {
+     usd[count] = words[i];
+     count++;
+  }
+  }
+}
+
+
+
+
+is = null;
+line = "";
+x = 0;
+//----------------------------------------------------------------------------
+try {
+                    //Location of daily USD/EUR archive set up through tweetarchivist
+    url = new URL("http://www.tweetarchivist.com/tweetmytrade/1/WordCloud");
+    is = url.openStream();  // throws an IOException
+    dis = new DataInputStream(new BufferedInputStream(is));
+
+    while ((line = dis.readLine()) != null) {
+       
+           if(line.contains("alt=\"\" />"))
+           {
+               String[] temp = line.split("title=\"");
+               
+               String[] temp2 = temp[1].split("\" alt=\"\" />");
+ 
+                   words[x] = temp2[0];
+                   x++;
+           }
+           
+            
+    
+    
+    }//dont
+
+} catch (MalformedURLException mue) {
+     mue.printStackTrace();
+} catch (IOException ioe) {
+     ioe.printStackTrace();
+} finally {
+    try {
+        is.close();
+    } catch (IOException ioe) {
+        // nothing to see here
+    }
+}
+String[] eur = new String[25];
+eur[0] = words[0];
+int counter = 1;
+for (int i = 1; i < 75; i++)
+{
+  if(words[i] != null)
+  {
+  if(words[i-1].equals(words[i]) == false)
+  {
+     eur[counter] = words[i];
+     counter++;
+  }
+  }
+}
+
+//------------------------------------------------------------------------
+int euroP = 0;
+int usdP = 0;
+
+//CURRENCY
+int Currency = 0;
+int eC = 0;
+int uC = 0;
+int timer = 0;
+for(String e : eur)
+{
+    if(e.equalsIgnoreCase("Currency"))
+        eC = timer+1;
+ timer++;
+}
+timer = 0;    
+for(String d : usd)
+{
+    if(d.equalsIgnoreCase("Currency"))
+        uC = timer+1;
+timer++;
+}
+
+if(eC > uC)
+{
+  Currency = 2;
+  euroP++;
+}
+else if(!(eC == uC))
+{
+  Currency = 1;
+  usdP++;
+}
+ 
+//XXX/YYY
+int tempE = 0;
+int tempU = 0;
+for(String e : eur)
+    if(e.contains("/"))
+        tempE++;
+        
+for(String d : usd)
+    if(d.contains("/"))
+        tempU++;
+
+int XXXYYY = 0;        
+ if(tempE > tempU)
+ {
+     usdP+=1;
+     XXXYYY = 1;
+ }
+ else
+ {
+     euroP+=1;
+     XXXYYY = 2;
+ }
+
+//X_X_X_X_X_XX_X_X_X_X_X_ NAME
+int rankE = 0;
+int rankU = 0;
+int t = 0;
+int rE = 0;
+int rU = 0;
+
+for(String e : usd){
+    if(e.equalsIgnoreCase("Euro"))
+        rankE = t+1;
+    t++;
+}
+
+t=0;        
+for(String d : usd){
+    if(d.equalsIgnoreCase("Dollar"))
+        rankU = t+1;
+    t++;
+}
+t=0;
+for(String e : eur){
+    if(e.equalsIgnoreCase("Euro"))
+        rE = t+1;
+    t++;
+}
+t=0;        
+for(String d : eur){
+    if(d.equalsIgnoreCase("Dollar"))
+        rU = t+1;
+    t++;
+}
+
+int NAME = 0;
+if((rankE != 0)||(rankU != 0) || (rE !=0)||(rU != 0))
+{
+if((rankE+rE) == 0)
+  {
+    usdP++;
+    NAME = 1;
+  }
+else if((rankU + rU) == 0)
+  {
+    usdP++;
+    NAME = 2;
+  }
+else if((rankE+rE) < (rankU+rU))
+{
+  euroP++;
+  NAME = 2;
+}
+else if (!((rankE+rE) == (rankU+rU)))
+{
+  usdP++;
+  NAME = 1;
+}
+}
+
+//-XXX_------------------------------POS NEG
+
+int countU = 0;
+int countE = 0;
+
+String[] good = {"Buy",
+"Bull",
+"Bullish",
+"High",
+"Upside",
+"Above",
+"Strong",
+"Trading Up",
+"Boosts",
+"Gains",
+"Calculator",
+"Rebound",
+"Upward", "Upward"};
+
+String[] bad = {"Back",
+"Parity",
+"Weak",
+"Falls",
+"Break",
+"Trading Down",
+"Sell",
+"Cut",
+"Devalue",
+"Far",
+"Slips",
+"Low",
+"Overvalued",
+"lows",
+"loss",
+"losses",
+"Downward",
+"disappointing",
+"Down",
+"Dip", "Dip"};
+
+
+
+for(String e : eur)
+{
+  for(String g : good)
+  {
+     if (g.equalsIgnoreCase(e))
+         countE++;
+  }
+  for(String b : bad)
+  {
+     if(b.equalsIgnoreCase(e))
+        countE--; 
+  }
+}
+
+for(String u : usd)
+{
+  for(String g : good)
+  {
+     if (g.equalsIgnoreCase(u))
+         countU++;
+  }
+  for(String b : bad)
+  {
+     if(b.equalsIgnoreCase(u))
+        countU--; 
+  }
+}
+
+int PN = 0;
+if(countU > countE)
+{
+  usdP++;
+  PN = 1;
+}
+  
+if(countE > countU)
+{
+  euroP++;
+  PN = 2;
+}
+//--------------------------------------------FOREX
+ int uFOREX = 0;
+ int eFOREX = 0;
+ int ct = 0;
+ int savU = 0;
+ int savE = 0;
+ for(String u : usd)
+ {
+    ct++;
+    if(u.equalsIgnoreCase("FOREX")){
+        savU = ct;
+    }
+        
+   if((savU == 0) && (ct == 25))
+   {
+       ct++;
+       savU = ct;
+   }
+ }
+ 
+  ct = 0;
+ for(String u : eur)
+ {
+    ct++;
+    if(u.equalsIgnoreCase("FOREX")){
+        savE = ct;
+    }
+        
+   if((savE == 0) && (ct == 25))
+   {
+       ct++;
+       savE = ct;
+   }
+ }
+ 
+int FOREX = 0;
+if(savU > savE)
+{
+  usdP++;
+  FOREX = 1;
+}
+  
+if(savE > savU)
+{
+  euroP++;
+  FOREX = 2;
+}
+  
+
+//------------------------------------------
+int fxU = 0;
+int fxE = 0;
+int tots = 0;
+
+for(String u : usd)
+ {
+    tots++;
+    if(u.equalsIgnoreCase("FX")){
+        fxU = tots;
+    }
+        
+   if((fxU == 0) && (tots == 25))
+   {
+       tots++;
+       fxU = tots;
+   }
+ }
+   
+tots = 0;   
+    
+for(String e : eur)
+ {
+    tots++;
+    if(e.equalsIgnoreCase("FX")){
+        fxE = tots;
+    }
+        
+   if((fxE == 0) && (tots == 25))
+   {
+       tots++;
+       fxE = tots;
+   }
+ }
+int FX = 0;   
+    
+if(fxE < fxU)
+  euroP++;
+  FX = 2;
+  
+if(fxU < fxE)
+  usdP++;
+  FX = 1;
+//-----------------------------------------
+
+//------------------------------------GET EXCHANGE RATE--------
+
+
+  String grabR = "";
+    try {
+                  
+    url = new URL("http://finance.yahoo.com/q?s=eurusd=X");
+    is = url.openStream();  // throws an IOException
+    dis = new DataInputStream(new BufferedInputStream(is));
+
+    while ((line = dis.readLine()) != null) {
+
+           if(line.contains("</span></span> <span class="))
+           {
+              String[] help = line.split("</span></span> <span class=");
+              String[] h2 = help[0].split("<span id=\"yfs_l10_eurusd=x\">");
+              grabR = h2[1];
+              
+           }
+           
+            
+    
+    }//dont
+
+} catch (MalformedURLException mue) {
+     mue.printStackTrace();
+} catch (IOException ioe) {
+     ioe.printStackTrace();
+} finally {
+    try {
+        is.close();
+    } catch (IOException ioe) {
+        // nothing to see here
+    }
+}
+
+String ALLDATA = grabR + ",";
+
+
+//Test Results by Test
+if(Currency == 1)
+  ALLDATA = ALLDATA + "USD" + ",";
+else if(Currency == 2)
+  ALLDATA = ALLDATA + "EURO" + ",";
+else if (Currency == 0)
+  ALLDATA = ALLDATA + "TIE" + ",";
+  
+if(XXXYYY == 1)
+  ALLDATA = ALLDATA + "USD" + ",";
+else if (XXXYYY == 2)
+  ALLDATA = ALLDATA + "EURO" + ",";
+else if (XXXYYY == 0)
+  ALLDATA = ALLDATA + "TIE" + ",";
+  
+if(NAME == 1)
+  ALLDATA = ALLDATA + "USD" + ",";
+else if (NAME == 2)
+  ALLDATA = ALLDATA + "EURO" + ",";
+else if (NAME == 0)
+  ALLDATA = ALLDATA + "TIE" + ",";
+  
+if(PN == 1)
+  ALLDATA = ALLDATA + "USD" + ",";
+else if (PN == 2)
+  ALLDATA = ALLDATA + "EURO" + ",";
+else if (PN == 0)
+  ALLDATA = ALLDATA + "TIE" + ",";
+  
+if(FOREX == 1)
+  ALLDATA = ALLDATA + "USD" + ",";
+else if (FOREX ==2)
+  ALLDATA = ALLDATA + "EURO" + ",";
+else
+  ALLDATA = ALLDATA + "TIE" + ",";
+  
+if(FX == 1)
+  ALLDATA = ALLDATA + "USD" + ",";
+else if (FX == 2)
+  ALLDATA = ALLDATA + "EURO" + ",";
+else
+  ALLDATA = ALLDATA + "TIE" + ",";
+  
+//Overall Score and Prediction
+Integer eP = new Integer(euroP);
+Integer usP = new Integer(usdP);
+ALLDATA = ALLDATA + eP.toString() + ",";
+ALLDATA = ALLDATA + usP.toString() +",";
+
+if(euroP > usdP)
+  ALLDATA = ALLDATA + "Euro;";
+else
+  ALLDATA = ALLDATA + "Dollar;";
+  
+if(euroP == usdP)
+  ALLDATA = ALLDATA + "None;";
+  
+  
+//Add USD/EUR words
+for(String w : usd)
+  ALLDATA = ALLDATA + w + "~";
+  
+ALLDATA = ALLDATA + "\n" + "--------------------------------------" + "\n";
+
+//Add EUR/USD words
+for(String w : eur)
+  ALLDATA = ALLDATA + w + "~";
+  
+ALLDATA = ALLDATA + "\n";
+//-----------x-----------------------x------------------------------x------------------------------------
+
+ try{
+   
+  FileWriter writem = new FileWriter("RawResults.txt");
+  BufferedWriter putit = new BufferedWriter(writem);
+  putit.write(ALLDATA);
+  putit.close();
+  print("done-1");
+ } catch (Exception e){System.err.println("Error: " + e.getMessage());
+ }
+ 
+ String date = month() + "-" + day();
+ try{
+   
+  FileWriter writem = new FileWriter("RawResults" + date + ".txt");
+  BufferedWriter putit = new BufferedWriter(writem);
+  putit.write(ALLDATA);
+  putit.close();
+  print("done-2");
+ } catch (Exception e){System.err.println("Error: " + e.getMessage());
+ }
+
+/*}
+  while((hour() == 10) && (minute() == 0) && (second() == 0))
+  {
+   delay(100); 
+  }
+
+}*/
