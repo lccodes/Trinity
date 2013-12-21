@@ -1,0 +1,281 @@
+URL url;
+InputStream is = null;
+DataInputStream dis;
+String line = "";
+String grabR = "";
+DecimalFormat form = new DecimalFormat("#.###");
+
+while ((month() == 9) || (month() == 10))
+{
+  if((hour() == 17) && (minute() == 0) && (second() == 0))
+  {
+    try {
+                  //Location of current EUR/USD rate
+    url = new URL("http://finance.yahoo.com/q?s=eurusd=X");
+    is = url.openStream();  // throws an IOException
+    dis = new DataInputStream(new BufferedInputStream(is));
+
+    while ((line = dis.readLine()) != null) {
+
+           if(line.contains("</span></span> <span class="))
+           {
+              String[] help = line.split("</span></span> <span class=");
+              String[] h2 = help[0].split("<span id=\"yfs_l10_eurusd=x\">");
+              grabR = h2[1];
+              
+           }
+           
+            
+    
+    }//dont
+
+} catch (MalformedURLException mue) {
+     mue.printStackTrace();
+} catch (IOException ioe) {
+     ioe.printStackTrace();
+} finally {
+    try {
+        is.close();
+    } catch (IOException ioe) {
+        // nothing to see here
+    }
+}
+
+Double r = new Double(grabR);
+double sRate = r.doubleValue();
+//---------------------------------------------------------
+double fRate = 0;
+String tempRate = "";
+String cResult = "";
+String xxxyyyResult = "";
+String nameResult = "";
+String pnResult = "";
+String forexResult = "";
+String fxResult = "";
+int usdCount = 0;
+int euroCount = 0;
+String Prediction = "";
+
+String date = month() + "-" + day();
+ try{
+   BufferedReader reader = new BufferedReader(new FileReader("RawResults" + date + ".txt"));
+   String aline = reader.readLine();
+   
+   String[] p1 = aline.split(",");
+   tempRate = p1[0];
+   cResult = p1[1];
+   xxxyyyResult = p1[2];
+   nameResult = p1[3];
+   pnResult = p1[4];
+   forexResult = p1[5];
+   fxResult = p1[6];
+   String tEuro = p1[7];
+   Integer tEUR = new Integer(tEuro);
+   euroCount = tEUR.intValue();
+   String tUsd = p1[8];
+   Integer tUSD = new Integer(tUsd);
+   usdCount = tUSD.intValue();
+   String[] p = p1[9].split(";");
+   Prediction = p[0];
+   
+   reader.close();
+ } catch (Exception e){//Catch exception if any
+	   		  System.err.println("Error: " + e.getMessage());
+	   		  }
+Double tR = new Double(tempRate);
+fRate = tR.doubleValue();
+
+//--------------------------------------------------
+int truth = 0;
+String ALLDATA = r.toString() + ",";
+//--||
+double pChange = 0.0;
+if(fRate > sRate)
+  {
+    double chan = sRate/fRate;
+    ALLDATA = ALLDATA + "-" + form.format(chan) + ",";
+    truth = 1;
+  }
+else if (fRate < sRate)
+{
+    double chan = fRate/sRate;
+    ALLDATA = ALLDATA + "+" + form.format(chan) + ",";
+    truth = 2;
+}
+else
+  { 
+    ALLDATA = ALLDATA + "0" + ",";
+  }
+
+//OVERALL  
+if(Prediction.equalsIgnoreCase("Dollar") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(Prediction.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(Prediction.equalsIgnoreCase("Dollar") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(Prediction.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(Prediction.equalsIgnoreCase("None"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//CURRNECY
+if(cResult.equalsIgnoreCase("USD") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(cResult.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(cResult.equalsIgnoreCase("USD") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(cResult.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(cResult.equalsIgnoreCase("TIE"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//XXXYYY
+if(xxxyyyResult.equalsIgnoreCase("USD") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(xxxyyyResult.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(xxxyyyResult.equalsIgnoreCase("USD") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(xxxyyyResult.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(xxxyyyResult.equalsIgnoreCase("TIE"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//Name
+if(nameResult.equalsIgnoreCase("USD") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(nameResult.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(nameResult.equalsIgnoreCase("USD") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(nameResult.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(nameResult.equalsIgnoreCase("None"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//P/N Result
+if(pnResult.equalsIgnoreCase("USD") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(pnResult.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(pnResult.equalsIgnoreCase("USD") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(pnResult.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(pnResult.equalsIgnoreCase("TIE"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//forex
+if(forexResult.equalsIgnoreCase("USD") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(forexResult.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(forexResult.equalsIgnoreCase("USD") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(forexResult.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(forexResult.equalsIgnoreCase("TIE"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//FX
+if(fxResult.equalsIgnoreCase("USD") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(fxResult.equalsIgnoreCase("Euro") && (truth == 1))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(fxResult.equalsIgnoreCase("USD") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "WRONG" + ",";
+}
+else if(fxResult.equalsIgnoreCase("Euro") && (truth == 2))
+{
+  ALLDATA = ALLDATA + "CORRECT" + ",";
+}
+else if(fxResult.equalsIgnoreCase("TIE"))
+{
+  ALLDATA = ALLDATA + "N/A" + ",";
+}
+
+//--------------------------------------------------
+ 
+ try{
+   
+  FileWriter writem = new FileWriter("RefinedResults" + date + ".txt");
+  BufferedWriter putit = new BufferedWriter(writem);
+  putit.write(ALLDATA);
+  putit.close();
+  print("done");
+ } catch (Exception e){System.err.println("Error: " + e.getMessage());
+ }
+  }
+  
+  while((hour() == 17) && (minute() == 0) && (second() == 0))
+  {
+   delay(100); 
+  }
+}
