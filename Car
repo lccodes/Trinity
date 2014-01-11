@@ -1,0 +1,91 @@
+//Support class for RandomCar
+public class Car
+{
+  int mx1, mx2, mx3, mx4, my1, my2, my3, my4, mz1, mz2, mz3, mz4; 
+  int[] cords = new int[12]; 
+  
+  public Car (int qX1, int qX2, int qX3, int qX4, int qY1, int qY2, int qY3, int qY4, int qZ1, int qZ2, int qZ3, int qZ4)
+  {
+    mx1 = qX1;
+    mx2 = qX2;
+    mx3 = qX3;
+    mx4 = qX4;
+    
+    my1 = qY1;
+    my2 = qY2;
+    my3 = qY3;
+    my4 = qY4;
+    
+    mz1 = qZ1;
+    mz2 = qZ2;
+    mz3 = qZ3;
+    mz4 = qZ4;
+    
+  cords[0] = mx1;
+  cords[1] = mx2;
+  cords[2] = mx3;
+  cords[3] = mx4;
+  cords[4] = my1;
+  cords[5] = my2;
+  cords[6] = my3;
+  cords[7] = my4;
+  cords[8] = mz1;
+  cords[9] = mz2;
+  cords[10] = mz3;
+  cords[11] = mz4;
+  }
+  
+  public int getCord(int which)
+  {
+     return cords[which--];
+  }
+  
+  public int getFrontal ()
+  {
+   int tr1 = (int) sqrt(sq(mx3-mx4)+sq(my3-my4)+sq(mz3-mz4));
+   int tr2 = (int) sqrt(sq(mx3-mx2)+sq(my3-my2)+sq(mz3-mz2));
+   int tr3 = (int) sqrt(sq(mx2-mx4)+sq(my2-my4)+sq(mz2-mz4));
+   int tot = tr1+tr2+tr3;
+   int frontArea = (int) (2*(mz1+mz2))*((int) sqrt(tot*(tot-tr1)+(tot-tr2)+(tot-tr3))); 
+   frontArea = (int) (-1*frontArea/500);
+   return frontArea;
+  }
+  
+  public int getCenterX ()
+  {
+    int centerX = (int) (mx1+mx2+mx3+mx4)/4;
+    
+    return centerX;
+  }
+  
+  public int getCenterY ()
+  {
+    int centerY = (int) (my1+my2+my3+my4)/4;
+    
+    return centerY;
+  }
+  
+  public int getCenterZ ()
+  {
+    int centerZ = (int) (mz1+mz2)/2;
+    
+    return centerZ;
+  }
+  
+  public int getTaperScore ()
+  {
+    int t = getCenterZ()*10;
+    
+    return t;
+  }
+  
+  public int getSymScore ()
+  {
+    return (-1*abs(getCenterX()-getCenterY()));
+  }
+  
+  public int getScore ()
+  {
+    return (getFrontal()+getTaperScore()+getSymScore()); 
+  }
+}
