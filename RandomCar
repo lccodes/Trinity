@@ -1,0 +1,714 @@
+fimport processing.opengl.*;
+import processing.dxf.*;
+
+boolean doit = true;
+boolean rec = true;
+boolean snap = true;
+int C, D, H, G, E, F, Z1, Z2, Z3, Z4;
+int tC, tD, tH, tG, tE, tF, tZ1, tZ2, tZ3, tZ4;
+int xkcd = 0;
+final int CONST = 250;
+String allCars = "";
+
+int speed;
+
+Car car1, car2;
+
+void setup()
+{
+    size(750, 750, OPENGL);
+    hint(DISABLE_OPENGL_2X_SMOOTH);
+    hint(ENABLE_OPENGL_4X_SMOOTH);
+   
+   //Start with random genes for the first car
+    double ts = Math.random();
+    ts = ts * CONST;
+    int tA = (int) ts;
+    double tb = Math.random();
+    tb = tb * CONST;
+    int tB = (int) tb;
+    double tc = Math.random();
+    tc = tc * CONST;
+    tC = (int) tc;
+    double td = Math.random();
+    td = td * CONST;
+    tD = (int) td;
+    
+    double te = Math.random();
+    te = te * CONST;
+    tE = (int) te;
+    double tf = Math.random();
+    tf = tf * CONST;
+    tF = (int) tf;
+    double tg = Math.random();
+    tg = tg * CONST;
+    tG = (int) tg;
+    double th = Math.random();
+    th = th * CONST;
+    tH = (int) th;
+    double tz = Math.random();
+    tz = tz * CONST;
+    tZ1 = (int) tz;
+    tz = Math.random();
+    tz = tz * CONST;
+    tZ2 = (int) tz;
+    tz = Math.random();
+    tz = tz * CONST;
+    tZ3 = (int) tz;
+    tz = Math.random();
+    tz = tz * CONST;
+    tZ4 = (int) tz;
+    //Print the starting genes of the car
+    if(rec)
+    {
+    car1 = new Car(tA, tB, tC, tD, tE, tF, tG, tH, tZ1, tZ2, tZ3, tZ4);
+    }
+    println("---" + car1.getFrontal());
+}
+
+void draw()
+{  
+//Save to the file the starting car
+if(rec)
+ {
+    beginRaw(DXF,"car.dxf");
+     String first = "\n" + car1.getCord(0) + "," + car1.getCord(4)  + "," + car1.getCord(1) + "," +  car1.getCord(5) + "," +  car1.getCord(2)  + "," +  car1.getCord(6) + "," +  car1.getCord(3) + "," +  car1.getCord(7) + "," +  car1.getCord(8) + "," +  car1.getCord(9) + "," +  car1.getCord(10) + "," +  car1.getCord(11);
+
+ try{
+   
+  FileWriter writem = new FileWriter("CARS.txt");
+  BufferedWriter putit = new BufferedWriter(writem);
+  putit.write(first);
+  putit.close();
+ } catch (Exception e){System.err.println("Error: " + e.getMessage());
+ }
+}
+    background(100, 0, 0);
+    fill(246, 225, 65);
+    
+    lights();
+    
+    //Every ten seconds, make a new random car
+    if(second()%10 == 0)
+    {
+    double a = Math.random();
+    a = a * CONST;
+    int A = (int) a;
+    double b = Math.random();
+    b = b * CONST;
+    int B = (int) b;
+    double c = Math.random();
+    c = c * CONST;
+    C = (int) c;
+    double d = Math.random();
+    d = d * CONST;
+    D = (int) d;
+    
+    double e = Math.random();
+    e = e * CONST;
+    E = (int) e;
+    double f = Math.random();
+    f = f * CONST;
+    F = (int) f;
+    double g = Math.random();
+    g = g * CONST;
+    G = (int) g;
+    double h = Math.random();
+    h = h * CONST;
+    H = (int) h;
+    double z = Math.random();
+    z = z * CONST;
+    Z1 = (int) z;
+    z = Math.random();
+    z = z * CONST;
+    Z2 = (int) z;
+    z = Math.random();
+    z = z * CONST;
+    Z3 = (int) z;
+    z = Math.random();
+    z = z * CONST;
+    Z4 = (int) z;
+    //----------------------TEST
+    car2 = new Car(A, B, C, D, E, F, G, H, Z1, Z2, Z3, Z4);
+  
+  //Compare the two front facing areas, breed the cars if 2 is better than 1
+  //Speed determines how many genes from the better car go into the child i.e. how quickly it evolves
+  if(car1.getFrontal() < car2.getFrontal())
+  {
+    snap = true;    
+    println( "Tape: car1: " + car1.getFrontal() + "-X- car2:" + car2.getFrontal()); 
+    //car1 = new Car(car2.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car2.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    
+    if(speed == 48)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 1
+    
+    if(speed == 49)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 2
+    
+    if(speed == 50)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 3
+
+    if(speed == 51)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 4
+    
+    if(speed == 52)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 5
+    
+    if(speed == 53)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 6
+    
+    if(speed == 54)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 7
+    
+    if(speed == 55)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 8
+    
+    
+    if(speed == 56)
+    {
+    int num = (int) Math.random() * 9;
+    if(num == 0)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));
+    }
+    else if(num == 1)
+    {
+     car1 = new Car(car1.getCord(0), car1.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+    else if(num == 2)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car1.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+    else if(num == 3)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car1.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+    else if(num == 4)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car1.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 5)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car1.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 6)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car1.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 7)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 8)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car1.getCord(9), car2.getCord(10), car2.getCord(11));
+    }
+   else if(num == 9)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car1.getCord(10), car2.getCord(11));
+    }
+    }//speed 9
+    
+    if(speed == 57)
+    {
+     car1 = new Car(car1.getCord(0), car2.getCord(1), car2.getCord(2), car2.getCord(3), car1.getCord(4), car2.getCord(5), car2.getCord(6), car2.getCord(7), car2.getCord(8), car2.getCord(9), car2.getCord(10), car2.getCord(11));   
+    }//speed 10
+    
+  }//ROUND 1 EVOLUTION
+  println("Front: car1: " + car1.getFrontal() + " -NO- car2:" + car2.getFrontal());
+  
+  //Does the same process except with the car's taper
+  if(car1.getTaperScore() < car2.getTaperScore())
+  {
+    int num = (int) Math.random() * 3;
+   
+   if(num == 0)
+  {   
+   car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));    
+  }
+  
+     if(num == 1)
+  {   
+   car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car2.getCord(10), car1.getCord(11));    
+  }
+  
+     if(num == 2)
+  {   
+   car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car2.getCord(9), car2.getCord(10), car1.getCord(11));    
+  }
+  
+     if(num == 3)
+  {   
+   car1 = new Car(car1.getCord(0), car1.getCord(1), car1.getCord(2), car1.getCord(3), car1.getCord(4), car1.getCord(5), car1.getCord(6), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car2.getCord(11));    
+  }
+  snap = true;
+  println( "Sym: car1: " + car1.getTaperScore() + "-X- car2:" + car2.getTaperScore()); 
+  }
+  println( "Sym: car1: " + car1.getTaperScore() + "-NO- car2:" + car2.getTaperScore()); 
+  
+  
+  //-------------------------------------------------------
+   doit = true; 
+   while(second()%10 == 0)
+   {
+     delay(100);
+   }
+      
+   }
+    
+    
+    
+    pushMatrix();
+    translate(width/3, height/2);
+    rotateY(radians(frameCount));
+    rotateX(PI/6);
+    rotateZ(radians(frameCount)/2);
+    drawCool(car1.getCord(0), car1.getCord(4), car1.getCord(1), car1.getCord(5), car1.getCord(2), car1.getCord(6), car1.getCord(3), car1.getCord(7), car1.getCord(8), car1.getCord(9), car1.getCord(10), car1.getCord(11));
+    popMatrix();
+    
+    if(snap)
+    {
+    save("image" + xkcd + ".jpg");
+    xkcd++;
+           String temp = "";
+
+ allCars += "\n" + car1.getCord(0) + "," + car1.getCord(4)  + "," + car1.getCord(1) + "," +  car1.getCord(5) + "," +  car1.getCord(2)  + "," +  car1.getCord(6) + "," +  car1.getCord(3) + "," +  car1.getCord(7) + "," +  car1.getCord(8) + "," +  car1.getCord(9) + "," +  car1.getCord(10) + "," +  car1.getCord(11);
+
+ try{
+   
+  FileWriter writem = new FileWriter("CARS.txt");
+  BufferedWriter putit = new BufferedWriter(writem);
+  putit.write(allCars);
+  putit.close();
+ } catch (Exception e){System.err.println("Error: " + e.getMessage());
+ }
+       
+    snap = false;  
+  }//endSNAP
+    
+    if(rec)
+ {
+    endRaw();
+    save("image" + xkcd + ".jpg");
+    xkcd++;
+    rec = false;
+ }
+}//end draw
+
+//GUI component of the cars
+void drawCool(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int Z1, int Z2, int Z3, int Z4)
+{
+  
+  if(doit == true)
+  {   
+    int tr1 = (int) sqrt(sq(x3-x4)+sq(y3-y4)+sq(Z3-Z4));
+    int tr2 = (int) sqrt(sq(x3-x2)+sq(y3-y2)+sq(Z3-Z2));
+    int tr3 = (int) sqrt(sq(x2-x4)+sq(y2-y4)+sq(Z2-Z4));
+    int tot = tr1+tr2+tr3;
+    int frontArea = (int) (2*(Z1+Z2))*((int) sqrt(tot*(tot-tr1)+(tot-tr2)+(tot-tr3)));
+    
+    int centerX = (int) (x1+x2+x3+x4)/4;
+    int centerY = (int) (y1+y2+y3+y4)/4;
+    int centerZ = (int) (Z1+Z2+Z3+Z4)/4;
+    
+    int frontalScore = -1*frontArea/500;
+    int taperScore = centerZ*10;
+    int symScore = -1*abs(centerX-centerY);
+    
+    int totalScore = frontalScore+taperScore+symScore;
+ // println(totalScore + " ---" + centerX + " ---" + centerY + " ---" + centerZ + " ---" + frontalScore + " ---" + taperScore + " ---" + symScore);
+  doit = false;
+  }
+  
+ beginShape();
+ vertex(x1,y1, Z1);
+ vertex(x2,y2, Z2);
+ vertex(x3,y3, Z3);
+ vertex(x4,y4, Z4);
+ endShape(CLOSE);
+
+ beginShape();
+ vertex(x1,y1, -Z1);
+ vertex(x2,y2, -Z2);
+ vertex(x3,y3, -Z3);
+ vertex(x4,y4, -Z4);
+ endShape(CLOSE);
+//FILL IN WALLS
+
+ fill(12,66,90);
+
+ beginShape();
+ vertex(x1,y1, Z1);
+ vertex(x1,y1, -Z1);
+ vertex(x2,y2, -Z2);
+ vertex(x2,y2, Z2);
+ endShape(CLOSE);
+ fill(0,66,90);
+ beginShape();
+ vertex(x2,y2, Z2);
+ vertex(x2,y2, -Z2);
+ vertex(x3,y3, -Z3);
+ vertex(x3,y3, Z3);
+ endShape(CLOSE);
+ fill(12,0,90);
+ beginShape();
+ vertex(x3,y3, Z3);
+ vertex(x3,y3, -Z3);
+ vertex(x4,y4, -Z4);
+ vertex(x4,y4, Z4);
+ endShape(CLOSE);
+ fill(12,66,0);
+ beginShape(); 
+ vertex(x4,y4, Z4);
+ vertex(x4,y4, -Z4);
+ vertex(x1,y1, -Z1);
+ vertex(x1,y1, Z1);
+ endShape(CLOSE);
+
+}
+
+//Change the speed anytime during evolution
+void keyPressed()
+{ 
+  if((key >= 48) && (key <= 57))
+  {
+    speed = key;  
+  }
+  println(speed);
+}
