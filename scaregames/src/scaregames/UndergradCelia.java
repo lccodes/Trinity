@@ -14,11 +14,16 @@ public class UndergradCelia extends Monster {
 	 */
 	@Override
 	public Monster advanceCareer(){
-		if(getTurns() >= 3)
+		if(getTurns() >= 3){
 			System.out.println("Undergrad Celia advances to Mailroom Mae!");
-		else
+			MailroomMae mon = new MailroomMae();
+			int cpDif = this.CPMAX - this.cp;
+			mon.upCP(-cpDif, 0);
+			return mon;
+		}
+		else{
 			System.out.println("Undergrad Celia cannot advance yet!");
-		
-		return (getTurns() >= 3) ? new MailroomMae() : this;
+			return this;
+		}
 	}
 }

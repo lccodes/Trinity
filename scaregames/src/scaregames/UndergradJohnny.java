@@ -15,12 +15,17 @@ public class UndergradJohnny extends Monster {
 	 */
 	@Override
 	public Monster advanceCareer(){
-		if(getTurns() >= 3)
-			System.out.println("Undergrad Johnny advances to Fear Co Worthington!");
-		else
+		if(getTurns() >= 3){
+			System.out.println("Undergrad Johnny advances to Fear Co. Worthington!");
+			FearCoWorthington mon = new FearCoWorthington();
+			int cpDif = this.CPMAX - this.cp;
+			mon.upCP(-cpDif, 0);
+			return mon;
+		}
+		else{
 			System.out.println("Undergrad Johnny cannot advance yet!");
-		
-		return (getTurns() >= 3) ? new FearCoWorthington() : this;
+			return this;
+		}
 	}
 
 }

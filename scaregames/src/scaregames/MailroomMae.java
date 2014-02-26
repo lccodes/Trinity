@@ -14,12 +14,17 @@ public class MailroomMae extends Monster {
 	 */
 	@Override
 	public Monster advanceCareer(){
-		if(getTurns() >= 3)
+		if(getTurns() >= 3){
 			System.out.println("Mailroom Mae advances to Monster Inc. Mae!");
-		else
+			MonsterIncMae mim = new MonsterIncMae();
+			int cpDif = this.CPMAX - this.cp;
+			mim.upCP(-cpDif, 0);
+			return mim;
+		}
+		else{
 			System.out.println("Mailroom Mae cannot advance yet!");
-		
-		return (getTurns() >= 3) ? new MonsterIncMae() : this;
+			return this;
+		}
 	}
 
 }

@@ -37,7 +37,7 @@ public class Monster implements Card {
 			int av = attackValue;
 
 			System.out.println(name + " attacks with " + attackName + "!");
-			if((house.equals("Roar Omegar Roar") && enemy.house.equals("Oozma Kappa")) ||
+			if((house.equals("Roar Omega Roar") && enemy.house.equals("Oozma Kappa")) ||
 					(house.equals("Oozma Kappa") && enemy.house.equals("Administration")) ||
 					(house.equals("Administration") && enemy.house.equals("Python Nu Kappa")) ||
 					(house.equals("Python Nu Kappa") && enemy.house.equals("Roar Omega Roar"))) {

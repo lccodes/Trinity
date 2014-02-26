@@ -15,12 +15,17 @@ public class UndergradRandy extends Monster {
 	 */
 	@Override
 	public Monster advanceCareer(){
-		if(getTurns() >= 3)
-			System.out.println("UndergradRandy advances to RookieRandall");
-		else
-			System.out.println("UndergradRandy cannot advance yet!");
-		
-		return (getTurns() >= 3) ? new RookieRandall() : this;
+		if(getTurns() >= 3){
+			System.out.println("Undergrad Randy advances to Rookie Randall!");
+			RookieRandall mon = new RookieRandall();
+			int cpDif = this.CPMAX - this.cp;
+			mon.upCP(-cpDif, 0);
+			return mon;
+		}
+		else{
+			System.out.println("Undergrad Randy cannot advance yet!");
+			return this;
+		}
 	}
 
 }

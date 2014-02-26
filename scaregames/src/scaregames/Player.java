@@ -86,6 +86,7 @@ public class Player {
 		case "Team Confidence Potion ADM": return (new TeamConfidencePotionADM());
 		case "Scaring 101": return (new Scaring101());
 		case "Rush Week": return (new RushWeek());
+		case "Wrong Door": return (new WrongDoor());
 		case "Shuffle": shuffle = true;
 		}
 		//For Java's sake
@@ -100,6 +101,7 @@ public class Player {
 		if (deck.size() > 0) {
 			hand.add(toCard(deck.get(0)));
 			deck.remove(0);
+			System.out.println(name + " draws a card!");
 		} else {
 			System.out.println("No more cards!");
 		}
@@ -159,7 +161,7 @@ public class Player {
 	public void addToField(Monster m){
 		if(isArenaEmpty()){
 			arena = m;
-			System.out.println("Your monster is in the arena");
+			System.out.println("The monster is in the arena");
 			arena.life = 0;
 		} else {
 			boolean check = true;
@@ -167,7 +169,7 @@ public class Player {
 			while(check && i < bench.length) {
 				if(bench[i] == null){
 					bench[i] = m;
-					System.out.println("Your monster is on the bench");
+					System.out.println("The monster is on the bench");
 					check = false;
 				}
 			i++;
@@ -193,15 +195,19 @@ public class Player {
 		if(isArenaEmpty()){
 			arena = bench[location];
 			bench[location] = null;
-			arena.life = 0;
+			if(arena != null)
+				arena.life = 0;
 		} else {
 			Monster temp = arena;
 			arena = bench[location];
 			bench[location] = temp;
-			arena.life = 0;
+			if(arena != null)
+				arena.life = 0;
 		}
 		if(arena != null)
 			System.out.println(arena.toString() + " is now in the arena");
+		else
+			System.out.println("Your arena is empty :( :/");
 	}
 	
 	/**
@@ -229,6 +235,7 @@ public class Player {
 						System.out.println("Here's your opponent's field; ripe for the picking");
 						System.out.println("-1 will free you from this hell");
 						opponent.printField();
+						System.out.println("Choose a number between 0 and 4");
 						int num = 7;
 						while(num >= 4 || num < -1){
 							try {
@@ -236,7 +243,6 @@ public class Player {
 							} catch (Exception e) {
 								System.out.println("That's invalid... :/");
 							}
-							System.out.println("Choose a number between 0 and 4");
 						}
 						if(opponent.bench[num] != null) {
 							addToField(opponent.bench[num]);
@@ -249,14 +255,14 @@ public class Player {
 					}
 				}else{
 					boolean done = false;
-					int select = 0;
+					int select = -1;
 					printField();
 					System.out.println("-1 to discard this card");
 					while(!done){
 						try {
 							select = Integer.parseInt(reader.readLine());
 						} catch (Exception e) {
-							System.out.println("Number plis");
+							System.out.println("Number please");
 						}
 						if(select <= bench.length && select >= 0 || select == -1){
 							done = true;
@@ -266,13 +272,9 @@ public class Player {
 					}
 					if(select != -1) {
 						if(select < bench.length && bench[select] != null){
-							int cpDif = bench[select].CPMAX - bench[select].cp;
 							bench[select] = c.play(bench[select]);
-							bench[select].upCP(-cpDif, 0);
 						}else if(arena != null){
-							int cpDif = arena.CPMAX - arena.cp;
 							 arena = c.play(arena);
-							 arena.upCP(-cpDif, 0);
 						} else{
 							System.out.println("There's no one there and you know that");
 						}
@@ -321,7 +323,8 @@ public class Player {
 	public void pass(){
 		System.out.println(name + " has passed to the next player!");
 		myTurn = false;
-		arena.life++;
+		if(arena != null)
+			arena.life++;
 		giveTurn();
 	}
 	

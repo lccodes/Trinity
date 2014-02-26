@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class Game {
 
-	public static void main(String[] args) throws IOException {/*
+	public static void main(String[] args) throws IOException {
 		String[] deck1 = ScareIO.getDeck(args[1]);
 		String[] deck2 = ScareIO.getDeck(args[3]);
 		
@@ -38,7 +38,7 @@ public class Game {
 		} else{
 			System.out.println("The game is over and Player 2 has won!");
 		}
-		*/
+		
 		//--------------------------------------------------------------------------------
 		//---------------TEST CASES-------------------------------------------------------
 		System.out.println("RUNNING TEST SUITE");

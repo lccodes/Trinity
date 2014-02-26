@@ -17,9 +17,9 @@ public class DeanHardscrabble extends Monster {
 		if(this.life > 0){
 			int av = enemy.cp;
 			enemy.getAttacked(av);
+			System.out.println("DEAN HARDSCRABBLE BANISHES " + enemy.name);
 			//DEAN TAKES A HIT
 			this.getAttacked(60);//#ouch
-			System.out.println("DEAN HARDSCRABBLE BANISHES!");
 		} else{
 			System.out.println("This monster is too yung blud to attack.");
 		}

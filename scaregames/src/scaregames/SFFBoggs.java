@@ -3,7 +3,7 @@ package scaregames;
 public class SFFBoggs extends Monster{
 	
 	public SFFBoggs () {
-		setUp("SFF Boggs", "Roar Omegar Roar", "Camoflauge", 60, 120);
+		setUp("SFF Boggs", "Roar Omega Roar", "Camoflauge", 60, 120);
 	}
 	
 	/**

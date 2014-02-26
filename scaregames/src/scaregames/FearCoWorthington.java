@@ -5,7 +5,7 @@ public class FearCoWorthington extends Monster{
 	 * Constructor
 	 */
 	public FearCoWorthington () {
-		setUp("Fear Co. Worthington", "Roar Omegar Roar", "Monster Horns", 50, 150);
+		setUp("Fear Co. Worthington", "Roar Omega Roar", "Monster Horns", 50, 150);
 	}
 
 }

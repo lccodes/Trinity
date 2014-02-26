@@ -5,6 +5,7 @@ public class Scaring101 extends TrainingCard{
 	@Override
 	public Monster play(Monster m) {
 		m.upCP(20, 20);
+		System.out.println(m.name + " gained CP!");
 		return m;
 	}
 	

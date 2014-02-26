@@ -15,9 +15,17 @@ public class TenuredHardscrabble extends Monster {
 	 */
 	@Override
 	public Monster advanceCareer(){
-		if(getTurns() >= 3)
-			System.out.println("Tenured Hardscrabble advances to Dean Hardscrabble");
-		return (getTurns() >= 3) ? new DeanHardscrabble() : this;
+		if(getTurns() >= 3){
+			System.out.println("Tenured Hardscrabble advances to Dean Hardscrabble!");
+			DeanHardscrabble mon = new DeanHardscrabble();
+			int cpDif = this.CPMAX - this.cp;
+			mon.upCP(-cpDif, 0);
+			return mon;
+		}
+		else{
+			System.out.println("Tenured Hardscrabble cannot advance yet!");
+			return this;
+		}
 	}
 
 }

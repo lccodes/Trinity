@@ -15,9 +15,17 @@ public class MailroomSullivan extends Monster{
 	 */
 	@Override
 	public Monster advanceCareer(){
-		if(getTurns() >= 3)
-			System.out.println("Mailroom Sullivan advances to SFF Sulley");
-		return (getTurns() >= 3) ? new SFFSulley() : this;
+		if(getTurns() >= 3){
+			System.out.println("Mailroom Sullivan advances to SFF Sully!");
+			SFFSulley mon = new SFFSulley();
+			int cpDif = this.CPMAX - this.cp;
+			mon.upCP(-cpDif, 0);
+			return mon;
+		}
+		else{
+			System.out.println("Mailroom Sullivan cannot advance yet!");
+			return this;
+		}
 	}
 
 }
